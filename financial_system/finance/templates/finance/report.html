@@ -1,0 +1,41 @@
+{% extends 'finance/base.html' %}
+
+{% block title %}Stock Report for {{ symbol }}{% endblock %}
+
+{% block content %}
+<h1>Welcome to the Financial System</h1>
+<p>Use this app to fetch stock data, backtest strategies, and generate predictions and reports.</p>
+    <p>Stock for {{ symbol }}</p>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>Close</th>
+                <th>High</th>
+                <th>Low</th>
+                <th>Volume</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stock_data %}
+            <tr>
+                <td>{{ stock.date }}</td>
+                <td>{{ stock.open_price }}</td>
+                <td>{{ stock.close_price }}</td>
+                <td>{{ stock.high_price }}</td>
+                <td>{{ stock.low_price }}</td>
+                <td>{{ stock.volume }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Summary</h2>
+    <p>Average Open Price: {{ average_open_price }}</p>
+    <p>Average Close Price: {{ average_close_price }}</p>
+
+    <!-- <h2>Prediction</h2>
+    <p>Predicted Price for {{ symbol }}: {{ predicted_price }}</p> -->
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'finance/base.html' %}
+
+{% block content %}
+<h2>Predicted Stock Prices for {{ symbol }} (Next 30 Days)</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Predicted Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prediction in predictions %}
+        <tr>
+            <td>{{ prediction.date }}</td>
+            <td>{{ prediction.predicted_price }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br></br>
+<form method="post" action="{% url 'generate_comparison_report' symbol=symbol %}">
+    {% csrf_token %}
+    <button class="btn btn-primary" type="submit">Generate Report</button>
+</form>
+
+{% endblock %}

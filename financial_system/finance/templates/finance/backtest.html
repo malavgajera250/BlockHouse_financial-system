@@ -1,0 +1,75 @@
+{% extends 'finance/base.html' %}
+
+{% block content %}
+<h2>Backtest for {{ symbol }}</h2>
+
+<form method="GET" action="">
+    <div class="form-group">
+        <label for="initial_investment">Initial Investment: (in dollars)</label>
+        <input type="number" class="form-control" id="initial_investment" name="initial_investment" value="{{ initial_investment }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="short_window">Short Window (e.g. 50-day MA): </label>
+        <input type="number" class="form-control" id="short_window" name="short_window" value="{{ short_window }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="long_window">Long Window (e.g. 80-day MA) (It should be less than 101 days): </label>
+        <input type="number" class="form-control" id="long_window" name="long_window" value="{{ long_window }}" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Run Backtest</button>
+</form>
+
+{% if total_return is not None %}
+<h3>Backtest Results</h3>
+<div class="alert alert-success">
+    <p>Total Return: {{ total_return }}%</p>
+    <p>Final Portfolio Value: {{ final_value }}</p>
+    <p>Max Drawdown: {{ max_drawdown }}%</p>
+    <p>Number of Trades Executed: {{ trades }}</p>
+</div>
+
+<!--button to download the backtest report as a PDF -->
+<form method="GET" action="{% url 'Backtest_report' %}" target="_blank">
+    <input type="hidden" name="symbol" value="{{ symbol }}">
+    <input type="hidden" name="initial_investment" value="{{ initial_investment }}">
+    <input type="hidden" name="short_window" value="{{ short_window }}">
+    <input type="hidden" name="long_window" value="{{ long_window }}">
+    <button type="submit" class="btn btn-success">Download Report</button>
+</form>
+{% endif %}
+
+<!-- stock data table -->
+{% if df %}
+<h3>Stock Data</h3>
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Date</th>
+            <th>Close Price</th>
+            <th>Short MA</th>
+            <th>Long MA</th>
+            <th>Signal</th>
+            <th>Positions</th>
+            <th>Portfolio Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in df %}
+        <tr>
+            <td>{{ row.date }}</td>
+            <td>{{ row.close_price }}</td>
+            <td>{{ row.short_mavg }}</td>
+            <td>{{ row.long_mavg }}</td>
+            <td>{{ row.signal }}</td>
+            <td>{{ row.positions }}</td>
+            <td>{{ row.portfolio_value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}
